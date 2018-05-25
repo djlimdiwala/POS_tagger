@@ -35,6 +35,8 @@ print (no_of_tags)
 
 test = open("Brown_tagged_dev.txt", "r")
 
+true_count = 0
+total_count = 0
 
 
 for line in test:
@@ -121,12 +123,27 @@ for line in test:
 			z = z + 1
 	print (prob)
 	print (backtrack)
-
-	ind = np.argmax(prob[:][len_of_sentence - 1])
+	print (len(splitted_0))
+	print (len(tags_list))
+	print (len(prob[0]))
+	print (len_of_sentence)
+	ind = np.argmax(prob[:,len_of_sentence - 1])
+	print (ind)
 	pred_seq.append(tags_list[ind])
-	for i in (0,len_of_sentence-1):
-		ind = backtrack[ind][-i]
+	for i in (0,len(backtrack[0])):
+		ind = int(backtrack[ind][-i])
+		print (ind)
 		pred_seq.insert(0,tags_list[ind])
 
-	# print (word_seq)
-	# print (tag_seq)
+
+	print (len(pred_seq))
+	print (len(tag_seq))
+	for i in (0, len(pred_seq)):
+		if pred_seq[i] == tag_seq[i]:
+			true_count += 1
+		total_count += 1
+	print (word_seq)
+	print (tag_seq)
+
+print (true_count)
+print (total_count)
