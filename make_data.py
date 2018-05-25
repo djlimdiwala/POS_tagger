@@ -5,10 +5,8 @@ train = open("Brown_tagged_train.txt", "r")
 tags = dict()
 emission = dict()
 transition_2 = dict()
-transition_3 = dict()
 words = dict()
 previous_1 = "."
-previous_2 = "."
 for line in train:
 
 	splitted_0 = line.split()
@@ -35,12 +33,7 @@ for line in train:
 		else:
 			transition_2[(previous_1,key1)] += 1
 
-		if (previous_2,previous_1,key1) not in transition_3:
-			transition_3[(previous_2,previous_1,key1)] = 1
-		else:
-			transition_3[(previous_2,previous_1,key1)] += 1
-
-		previous_2 = previous_1
+		
 		previous_1 = key1
 
 		if (key0,key1) not in emission:
@@ -56,9 +49,6 @@ for (key_0,key_1) in emission:
 print ("\n-------- transition_2 counts --------\n")
 for (key_0,key_1) in transition_2:
 	print (key_0 + " -> " + key_1 + " : " + str(transition_2[(key_0,key_1)]))
-print ("\n-------- transition_2 counts --------\n")
-for (key_0,key_1,key_2) in transition_3:
-	print (key_0 + " -> " + key_1 + " -> " + key_2 + " : " + str(transition_3[(key_0,key_1,key_2)]))
 print ("\n-------- Tag counts --------\n")
 for key in tags:
 	print (str(key) + " : " + str(tags[key]))
@@ -80,9 +70,6 @@ with open('words.pickle', 'wb') as handle:
 
 with open('transition_2.pickle', 'wb') as handle:
     pickle.dump(transition_2, handle, protocol=pickle.HIGHEST_PROTOCOL)
-
-with open('transition_3.pickle', 'wb') as handle:
-    pickle.dump(transition_3, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
 with open('emission.pickle', 'wb') as handle:
     pickle.dump(emission, handle, protocol=pickle.HIGHEST_PROTOCOL)
