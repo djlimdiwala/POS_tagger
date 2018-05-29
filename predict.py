@@ -146,4 +146,4 @@ for line in test:
 	print (tag_seq)
 
 print (true_count)
-print (total_count)
+print (total_count + "dekh aaya kya")
