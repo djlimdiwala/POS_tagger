@@ -1,6 +1,16 @@
 import pickle
 
 
+def seperate_tags (text):
+	spl = text.split("/")
+	sep_word = spl[0]
+	sep_tag = spl[len(spl) - 1]
+	for i in range(1,len(spl)-1):
+		sep_word = sep_word + "/" + spl[i]
+
+	return (sep_word,sep_tag)
+
+
 train = open("Brown_tagged_train.txt", "r")
 tags = dict()
 emission = dict()
@@ -12,11 +22,19 @@ for line in train:
 	splitted_0 = line.split()
 
 	for i in range(0,len(splitted_0)):
-		splitted_1 = splitted_0[i].split("/")
-		key0 = splitted_1[0]
-		key1 = splitted_1[1]
+		# splitted_1 = splitted_0[i].split("/")
+		# key0 = splitted_1[0]
+		# key1 = splitted_1[1]
+
+		key0, key1 = seperate_tags(splitted_0[i])
+
+		if '/' in key0:
+			print (key0 + "  ---  " + key1)
 		if key1 not in tags:
-			tags[key1] = 1
+			if key0 == "1/4''":
+				tags['NOUN'] += 1
+			else:
+				tags[key1] = 1
 		else:
 			tags[key1] += 1
 
@@ -46,16 +64,16 @@ for line in train:
 print ("\n-------- Emission counts --------\n")
 for (key_0,key_1) in emission:
 	print (key_1 + " -> " + key_0 + " : " + str(emission[(key_0,key_1)]))
-print ("\n-------- transition_2 counts --------\n")
-for (key_0,key_1) in transition_2:
-	print (key_0 + " -> " + key_1 + " : " + str(transition_2[(key_0,key_1)]))
-print ("\n-------- Tag counts --------\n")
-for key in tags:
-	print (str(key) + " : " + str(tags[key]))
+# print ("\n-------- transition_2 counts --------\n")
+# for (key_0,key_1) in transition_2:
+# 	print (key_0 + " -> " + key_1 + " : " + str(transition_2[(key_0,key_1)]))
+# print ("\n-------- Tag counts --------\n")
+# for key in tags:
+# 	print (str(key) + " : " + str(tags[key]))
 
-print ("\n-------- Word counts --------\n")
-for key in words:
-	print (str(key) + " : " + str(words[key]))
+# print ("\n-------- Word counts --------\n")
+# for key in words:
+# 	print (str(key) + " : " + str(words[key]))
 
 
 
