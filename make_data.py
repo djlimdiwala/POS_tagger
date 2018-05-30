@@ -31,10 +31,7 @@ for line in train:
 		if '/' in key0:
 			print (key0 + "  ---  " + key1)
 		if key1 not in tags:
-			if key0 == "1/4''":
-				tags['NOUN'] += 1
-			else:
-				tags[key1] = 1
+			tags[key1] = 1
 		else:
 			tags[key1] += 1
 
