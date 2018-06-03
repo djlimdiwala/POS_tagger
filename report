@@ -1,0 +1,58 @@
+In this play there were some thirty or more named characters and I don't know how many more unnamed . 
+
+play is noun but tagged as verb.
+-----------------------------------------------------------------------------------
+
+Contact For further information , contact the Bank for Cooperatives serving the region , or the Farm Credit Administration , Research and Information Division , Washington 25 , D.C. .
+
+Here, first and second contact are both VERB. But tagger has tagged first contact as NOUN. because there is not enough context.
+-------------------------------------------------------------------------------------
+
+Small wonder that Milton later boasted of how well his work had been received there , since he attained a rank in the order of commencing bachelors higher than that of any other inceptor from Christ's of that year . 
+
+Small is ADJECTIVE but tagged as NOUN.
+------------------------------------------------------------------------------------
+
+Roger Williams had recently been thrown out , and Anne Hutchinson and her Antinomians were slugging it out with the powers-that-be .
+
+Her is detetminer but tagged as pronoun. 
+-------------------------------------------------------------------------------------
+
+She said it was after she returned from her vomiting spell in the back yard that Mrs. Borden told her to wash the windows . 
+
+Here, first her is DET but is tagged as pronoun. 
+--------------------------------------------------------------------------------------
+
+X tag is mostly classified as its accuracy is 17.46 %
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+In POS tagging, encountering the unknown words are very common. NOUNs or VERBs are open class so they keep being created. So, we have to deal with them when they are not in corpus. To achieve high accuracy, unknown words have to be handled properly. 
+I have used morphology. Morphology is the most important source of information of words. Words ending with -ed are most likely to be past participles. Words ending with -s are most likely to be plural nouns.
+
+My approach
+-----------
+I have counted counts last four letters of every word. i.e. count that particular letter comes at particular position given tag t. 
+Consider the following formulas
+
+
+
+
+When an unknown word comes in test data, these four counts are found following value is calculated.
+
+
+
+This value is used instead of emission probabilties.
