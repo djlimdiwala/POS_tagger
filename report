@@ -51,8 +51,9 @@ Consider the following formulas
 
 
 
-When an unknown word comes in test data, these four counts are found following value is calculated.
+When an unknown word comes in test data, these four counts are found. Let's call value of equqtion 9 as P, value of equation 10 as Q, value of equation 11 as R and value of equation 12 as S. Uaing these values, following value is calculated.
 
 
 
-This value is used instead of emission probabilties.
+Now 
+This value is used instead of emission probability in equation 6. So, equation 6 can be rewritten as -
