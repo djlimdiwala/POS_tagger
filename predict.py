@@ -1,6 +1,8 @@
 import pickle
 import numpy as np
 
+
+# Seperating words and tags from input file
 def seperate_tags (text):
 	spl = text.split("/")
 	sep_word = spl[0]
@@ -11,15 +13,15 @@ def seperate_tags (text):
 	return (sep_word,sep_tag)
 
 
-
+# Calculating probabilities from counts
 def take_log (a,b):
 	c = a / b
 	if c == 0:
 		return 0
 	else:
-		# return (0-np.log(c))
 		return (c * 10)
 
+# Calculating morphologistic probabilities for unknown words
 def check_morpho(text,morpho,tagg):
 	j = 0
 	ll = len (text)
@@ -33,10 +35,9 @@ def check_morpho(text,morpho,tagg):
 		else:
 			break
 		j = j + 1
-	# print ("---------")
 	return total
 
-
+# Loading pickle files of counts created by make_data.py
 with open('tags.pickle', 'rb') as handle:
     tags = pickle.load(handle)
 
@@ -62,10 +63,8 @@ no_of_tags = len(tags)
 tags_list = []
 for key in tags:
 	tags_list.append(key)
-# print (no_of_tags)
-# print ("here....")
-# print (tags_list)
 
+# Opening Test file
 test = open("Brown_tagged_dev.txt", "r")
 
 true_count = 0
@@ -75,12 +74,16 @@ for tagg in tags_list:
 	indi_total[tagg] = 0
 	indi_true[tagg] = 0
 
+
+# Processing test file line by line
 for line in test:
 
 
 	
 	splitted_0 = line.split()
 	len_of_sentence = len(splitted_0)
+
+	# Initiating probability and backtrack arrays for Viterbi algo
 	prob = np.zeros(shape = (no_of_tags,len_of_sentence))
 	backtrack = np.zeros(shape = (no_of_tags,len_of_sentence))
 
@@ -96,6 +99,8 @@ for line in test:
 	tag_seq.append(sep_tag)
 	previous_1 = "."
 	z = 0
+
+	# Applying Viterbi on first word of the sentence.
 	for tag in tags_list:
 		
 		if (previous_1,tag) not in transition_2:
@@ -124,7 +129,7 @@ for line in test:
 
 
 
-
+	# Applying Viterbi on rest of the words of the sentence.
 	for i in range(1,len(splitted_0)):
 
 		splitted_1 = splitted_0[i].split("/")
@@ -146,7 +151,7 @@ for line in test:
 					a = take_log (transition_2[(previous_1,tag)], tags[previous_1])
 
 
-
+				# Checking whether the word is know or unknown
 				if word_seq[i] not in words:
 					b = take_log (check_morpho(word_seq[0],morpho,tag), tags[previous_1])
 				else:
@@ -155,7 +160,7 @@ for line in test:
 					else:
 						b = take_log (emission[(word_seq[i],tag)], tags[tag])
 
-
+				# Updating probability and backtrack table
 				if a == 0 or b == 0:
 					if prob[z,i] < 0:
 						prob[z,i] = 0
@@ -175,8 +180,8 @@ for line in test:
 
 			z = z + 1
 
+	# Finding most probable tag sequence from backtrack table
 	ind = np.argmax(prob[:,len_of_sentence - 1])
-
 	pred_seq.append(tags_list[int(ind)])
 
 	for i in range(len_of_sentence - 1,0,-1):
@@ -185,7 +190,8 @@ for line in test:
 
 
 
-
+	# Checking whether predicted tags are true or not and updating
+	# confusion matrix and tag-wise accuracy accordingly
 	for i in range(0, len(pred_seq)):
 
 		if (tag_seq[i],pred_seq[i]) not in confusion:
@@ -199,15 +205,6 @@ for line in test:
 			if tag_seq[i] in indi_true:
 				indi_true[tag_seq[i]] += 1
 
-			
-
-		else:
-			if tag_seq[i] == "X":
-			 # and word_seq[i] == "her": 
-				print ("X --- " + pred_seq[i] +"  --->  " + word_seq[i])
-				# print (word_seq)
-				print ("-----------------------------------------------------")
-
 		
 		if tag_seq[i] in indi_total:
 				indi_total[tag_seq[i]] += 1
@@ -215,11 +212,13 @@ for line in test:
 		total_count += 1
 
 
+print ("-------------------------------------------------------------------------\n")
+print (str(true_count) + " out of " + str(total_count) +" tags predicted correctly")
+print ("Accuracy :- " + str((true_count/total_count) * 100))
+print ("\n")
+print ("---------------\n")
 
-
-print (true_count)
-print (total_count)
-print (float(true_count/total_count) * 100)
+# Printing Confusion matrix
 print ("%5s" % "T/P",end='')
 print ("|",end='')
 
@@ -240,6 +239,10 @@ for i in range(0,no_of_tags):
 	print ("")
 
 
-print ("\n---------------")
+# Printing Tag-wise accuracy
+print ("\n---------------\n")
+print ("Tag-wise accuracy...")
 for tagg in tags_list:
-	print (tagg + "  ->   " + str(float(indi_true[tagg]/indi_total[tagg])))
+	print ("%6s   ->    %s" % (tagg , str(float(indi_true[tagg] * 100 /indi_total[tagg]))))
+
+print ("\n-------------------------------------------------------------------------\n")

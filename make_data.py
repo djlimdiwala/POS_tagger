@@ -1,6 +1,6 @@
 import pickle
 
-
+# Seperating words and tags from input file
 def seperate_tags (text):
 	spl = text.split("/")
 	sep_word = spl[0]
@@ -11,6 +11,7 @@ def seperate_tags (text):
 	return (sep_word,sep_tag)
 
 
+# Storing Morphologistic counts
 def morphology (text,mor,tagg):
 
 	j = 0
@@ -27,7 +28,10 @@ def morphology (text,mor,tagg):
 	# print ("---------")
 	return morpho
 
+# Opeing train corpus file
 train = open("Brown_tagged_train.txt", "r")
+
+# Initiating empty dictionaries for all counts
 tags = dict()
 emission = dict()
 transition_2 = dict()
@@ -35,29 +39,31 @@ words = dict()
 morpho = dict()
 morpho = [dict() for x in range(4)]
 previous_1 = "."
+count = 0
+
+# Processing train file line by line
 for line in train:
 
 	splitted_0 = line.split()
-
+	count = count + len(splitted_0)
 	for i in range(0,len(splitted_0)):
 
 		key0, key1 = seperate_tags(splitted_0[i])
 
-		if '/' in key0:
-			print (key0 + "  ---  " + key1)
+		# Updating tag counts
 		if key1 not in tags:
 			tags[key1] = 1
 		else:
 			tags[key1] += 1
 
-
+		# Updating word counts
 		if key0 not in words:
 			words[key0] = 1
 		else:
 			words[key0] += 1
 
 
-
+		# Updating C(t_i, t_i-1) i.e. bigram counts
 		if (previous_1,key1) not in transition_2:
 			transition_2[(previous_1,key1)] = 1
 		else:
@@ -66,8 +72,11 @@ for line in train:
 		
 		previous_1 = key1
 
+		# Updating Morphologistic counts
 		morpho = morphology (key0,morpho,key1)
 
+
+		# Updating P(w_i, t_i) i.e. emission counts
 		if (key0,key1) not in emission:
 			emission[(key0,key1)] = 1
 		else:
@@ -88,17 +97,25 @@ for line in train:
 # print ("\n-------- Word counts --------\n")
 # for key in words:
 # # 	print (str(key) + " : " + str(words[key]))
+# print ("\n-------- Morphology counts --------\n")
+# for i in range(0,4):
+# 	for (key_0,key_1) in morpho[i]:
+# 		print (key_1 + " -> " + key_0 + " : " + str(morpho[i][(key_0,key_1)]))
 
-print ("\n-------- Morphology counts --------\n")
-for i in range(0,4):
-	for (key_0,key_1) in morpho[i]:
-		print (key_1 + " -> " + key_0 + " : " + str(morpho[i][(key_0,key_1)]))
+# 	print ("---------\n")
 
-	print ("---------")
+print ("--------------------------------------------------------------")
+print ("Counts created......Following files created.........\n")
+print ("tags.pickle")
+print ("words.picke")
+print ("transition_2.pickle")
+print ("emission.pickle")
+print ("morpho.pickle\n")
+print ("Please refer README for further process...")
+print ("--------------------------------------------------------------")
 
-# print (morpho)
 
-
+# Saving all count dictionaries as a pickel files 
 with open('tags.pickle', 'wb') as handle:
     pickle.dump(tags, handle, protocol=pickle.HIGHEST_PROTOCOL)
 
